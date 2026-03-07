@@ -6,13 +6,21 @@ class ArticlesInitialState extends ArticlesStates {}
 
 class LoadGetAllArticlesState extends ArticlesStates {}
 
-class SuccessGetAllArticlesState extends ArticlesStates {
-  List<ArticleData>articlesList;
+// class SuccessGetAllArticlesState extends ArticlesStates {
+//   List<ArticleData>articlesList;
+//
+//
+//   SuccessGetAllArticlesState({required this.articlesList});
+// }
+class ArticlesLoaded extends ArticlesStates {
+  final List<ArticleData> articlesList;
+  final bool hasReachedEnd;
 
-
-  SuccessGetAllArticlesState({required this.articlesList});
+  ArticlesLoaded({
+    required this.articlesList,
+    required this.hasReachedEnd,
+  });
 }
-
 class ErrorGetAllArticlesState extends ArticlesStates {
   String message;
 

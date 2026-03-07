@@ -28,11 +28,13 @@ class NetworkHandler {
     }
   }
 
-  static Future<List<ArticleData>> getAllArticles(String sourceId) async {
+  static Future<List<ArticleData>> getAllArticles(String sourceId,int page, int pageSize) async {
     try {
       Map<String, dynamic> queryParameters = {
         'apiKey': ApiConstants.apiKey,
         'sources': sourceId,
+        'page':page.toString(),
+        'pageSize': pageSize.toString(),
       };
       final response = await http.get(
         Uri.https(ApiConstants.urlBase, Endpoints.allArticles, queryParameters),
@@ -43,6 +45,7 @@ class NetworkHandler {
         for (var element in data["articles"]) {
           ArticleData articleData = ArticleData.fromJson(element);
           articlesList.add(articleData);
+
         }
 
         return articlesList;

@@ -5,7 +5,7 @@ import 'package:news/core/config/routes/page_route_names.dart';
 
 import 'core/bloc_observer.dart';
 
-import 'package:url_launcher/url_launcher.dart';
+
 void main() {
   Bloc.observer = MyBlocObserver();
   runApp(const MyApp());

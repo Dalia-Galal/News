@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:news/models/article_data.dart';
 import 'package:news/modules/home/repository/home_repo_implementaion.dart';
 import 'package:news/modules/home/search_cubit/search_cubit.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/config/theme/color_palette.dart';
 import '../../../gen/assets.gen.dart';
@@ -97,73 +99,92 @@ class _SearchViewState extends State<SearchView> {
                       child: ListView.builder(
                         itemCount: state.articleList.length,
                         itemBuilder: (context, index) {
-                          return Container(
-                            padding: EdgeInsets.all(8.0),
-                            margin: EdgeInsets.symmetric(
-                              vertical: 8,
-                              horizontal: 10,
-                            ),
-                            width: 360,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: ColorPalette.black),
-                            ),
-                            child: Column(
-                              spacing: 10,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadiusGeometry.circular(
-                                    16,
-                                  ),
-                                  child:
-                                      (state.articleList[index].urlToImage !=
-                                          null)
-                                      ? Image.network(
-                                          state
-                                              .articleList[index]
-                                              .urlToImage!,
-                                        )
-                                      : SizedBox(
-                                          height: 100,
-                                          width: double.infinity,
+                          return InkWell(onTap:()async {
+                            try {
+                              Uri siteLink = Uri.parse(
+                                state.articleList[index].url,
+                              );
+                              await launchUrl(siteLink);
+                            } catch (e) {
+                              debugPrint(e.toString());
+                            }
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => ArticleWebView(
+                            //       url: state.articlesList[index].url,
+                            //     ),
+                            //   ),
+                            // );
+                          },
+                            child: Container(
+                              padding: EdgeInsets.all(8.0),
+                              margin: EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 10,
+                              ),
+                              width: 360,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: ColorPalette.black),
+                              ),
+                              child: Column(
+                                spacing: 10,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadiusGeometry.circular(
+                                      16,
+                                    ),
+                                    child:
+                                        (state.articleList[index].urlToImage !=
+                                            null)
+                                        ? Image.network(
+                                            state
+                                                .articleList[index]
+                                                .urlToImage!,
+                                          )
+                                        : SizedBox(
+                                            height: 100,
+                                            width: double.infinity,
 
-                                          child: Text(
-                                            'No Image to preview',
-                                            textAlign: TextAlign.center,
+                                            child: Text(
+                                              'No Image to preview',
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
-                                        ),
-                                ),
-                                Text(
-                                  state.articleList[index].title,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: ColorPalette.black,
                                   ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      state.articleList[index].author??'Unknown Author',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xFFA0A0A0),
-                                      ),
+                                  Text(
+                                    state.articleList[index].title,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: ColorPalette.black,
                                     ),
-                                    Text(
-                                      ' 15 minutes ago',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xFFA0A0A0),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        state.articleList[index].author??'Unknown Author',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xFFA0A0A0),
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                      Text(
+                                        ' 15 minutes ago',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xFFA0A0A0),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },

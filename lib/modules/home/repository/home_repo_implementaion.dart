@@ -6,8 +6,8 @@ import 'package:news/network_handler/network_handler.dart';
 class HomeRepoImplementation implements HomeRepository
 {
   @override
-  Future<List<ArticleData>> getAllArticles(String sourceId) async{
-   return await NetworkHandler.getAllArticles(sourceId);
+  Future<List<ArticleData>> getAllArticles(String sourceId,int page,int pageSize) async{
+   return await NetworkHandler.getAllArticles(sourceId,page,pageSize);
   }
 
   @override
