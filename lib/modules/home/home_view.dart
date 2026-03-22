@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:news/core/config/routes/page_route_names.dart';
-import 'package:news/core/config/theme/color_palette.dart';
+import 'package:news/core/config/page_route_names.dart';
+import 'package:news/core/settings/settings_cubit.dart';
+import 'package:news/core/theme/color_palette.dart';
 import 'package:news/models/category_data_model.dart';
 import 'package:news/modules/home/articles_cubit/articles_cubit.dart';
 
@@ -62,29 +63,36 @@ class _HomeViewState extends State<HomeView> {
     ),
   ];
   CategoryDataModel? selectedCategory;
-  var homeRepository = HomeRepoImplementation() ;
+  var homeRepository = HomeRepoImplementation();
+
   @override
   Widget build(BuildContext context) {
 
-    return
-      MultiBlocProvider(
-         providers: [
-           BlocProvider(create: (context) => SourcesCubit(homeRepository)),
-           BlocProvider(create: (context) => HomeCubit()),
-           BlocProvider(create: (context)=> ArticlesCubit(homeRepository)),
-    BlocProvider(
-    create: (context) => SearchCubit(homeRepository)),
-         ],
-        child: Scaffold(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => SourcesCubit(homeRepository)),
+        BlocProvider(create: (context) => HomeCubit()),
+        BlocProvider(create: (context) => ArticlesCubit(homeRepository)),
+        BlocProvider(create: (context) => SearchCubit(homeRepository)),
+      ],
+      child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-
+          foregroundColor:
+              (context.watch<SettingsCubit>().state.themeMode ==
+                  ThemeMode.light)
+              ? ColorPalette.black
+              : ColorPalette.white,
           title: Text(
             selectedCategory?.title ?? 'Home',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF171717),
+              color:
+                  context.watch<SettingsCubit>().state.themeMode ==
+                      ThemeMode.light
+                  ? Color(0xFF171717)
+                  : ColorPalette.white,
             ),
           ),
           centerTitle: true,
@@ -102,15 +110,20 @@ class _HomeViewState extends State<HomeView> {
                 );
               },
               child: Assets.icons.search.svg(
-                colorFilter: ColorFilter.mode(ColorPalette.black, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                  (context.watch<SettingsCubit>().state.themeMode ==
+                          ThemeMode.light)
+                      ? ColorPalette.black
+                      : ColorPalette.white,
+                  BlendMode.srcIn,
+                ),
               ),
             ),
           ],
           actionsPadding: EdgeInsets.symmetric(horizontal: 20),
         ),
 
-        drawer:CustomDrawerWidget(),
-
+        drawer: CustomDrawerWidget(),
         body: selectedCategory == null
             ? Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -125,6 +138,11 @@ class _HomeViewState extends State<HomeView> {
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w500,
+                          color:
+                              (context.watch<SettingsCubit>().state.themeMode ==
+                                  ThemeMode.light)
+                              ? ColorPalette.black
+                              : ColorPalette.white,
                         ),
                       ),
                       ...List.generate(categories.length, (index) {
@@ -138,9 +156,9 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
               )
-            : LoadedNewsView(categoryDataModel:selectedCategory!)
-            ),
-      );
+            : LoadedNewsView(categoryDataModel: selectedCategory!),
+      ),
+    );
   }
 
   void _onCategoryTap(CategoryDataModel categoryDataModel) {

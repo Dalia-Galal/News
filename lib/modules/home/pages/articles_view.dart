@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news/core/settings/settings_cubit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../core/config/theme/color_palette.dart';
+import '../../../core/theme/color_palette.dart';
 import '../articles_cubit/articles_cubit.dart';
 import '../widgets/custom_bottom_sheet.dart';
 
@@ -37,6 +38,8 @@ class _ArticlesViewState extends State<ArticlesView> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight =
+    (context.watch<SettingsCubit>().state.themeMode == ThemeMode.light);
     return Flexible(
       child: BlocBuilder<ArticlesCubit, ArticlesStates>(
         builder: (context, state) {
@@ -69,7 +72,7 @@ class _ArticlesViewState extends State<ArticlesView> {
                     width: 360,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: ColorPalette.black),
+                      border: Border.all(color:isLight? ColorPalette.black:ColorPalette.white),
                     ),
                     child: InkWell(
                       onTap: () {
@@ -122,7 +125,7 @@ class _ArticlesViewState extends State<ArticlesView> {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
-                              color: ColorPalette.black,
+                              color: isLight?ColorPalette.black:ColorPalette.white,
                             ),
                           ),
                           Row(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:news/core/config/routes/page_route_names.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news/core/config/page_route_names.dart';
+import 'package:news/core/settings/settings_cubit.dart';
 import 'package:news/gen/assets.gen.dart';
 
 class SplashView extends StatefulWidget {
@@ -20,6 +22,8 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight =
+    (context.watch<SettingsCubit>().state.themeMode == ThemeMode.light);
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -30,8 +34,8 @@ class _SplashViewState extends State<SplashView> {
              mainAxisSize: MainAxisSize.max,
             children: [
               Spacer(),
-              Image.asset(
-                Assets.images.mic.path,
+              Image.asset(isLight?
+                Assets.images.mic.path :Assets.images.micDark.path,
                 width: 170,
                 height: 200,
                 alignment: AlignmentGeometry.center,
@@ -39,7 +43,8 @@ class _SplashViewState extends State<SplashView> {
               ),
               Spacer(),
               Image.asset(
-                Assets.images.newsBranding.path,
+                isLight?
+                Assets.images.newsBranding.path:Assets.images.newsBrandingDark.path,
                 width: 270,
                 height: 120,
                 alignment: AlignmentGeometry.topCenter,

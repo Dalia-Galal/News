@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:news/models/article_data.dart';
 import 'package:news/models/source_data_model.dart';
-import 'package:news/network_handler/api_constants.dart';
-import 'package:news/network_handler/endpoints.dart';
+import 'package:news/core/network_handler/api_constants.dart';
+import 'package:news/core/network_handler/endpoints.dart';
 
 class NetworkHandler {
   static Future<List<SourceData>> getAllSources(String categoryId) async {

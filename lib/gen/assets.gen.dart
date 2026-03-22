@@ -20,6 +20,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/Search.svg
   SvgGenImage get search => const SvgGenImage('assets/icons/Search.svg');
 
+  /// File path: assets/icons/arrow.svg
+  SvgGenImage get arrow => const SvgGenImage('assets/icons/arrow.svg');
+
   /// File path: assets/icons/globe.svg
   SvgGenImage get globe => const SvgGenImage('assets/icons/globe.svg');
 
@@ -33,7 +36,7 @@ class $AssetsIconsGen {
   SvgGenImage get xIcon => const SvgGenImage('assets/icons/x_icon.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [search, globe, home, theme, xIcon];
+  List<SvgGenImage> get values => [search, arrow, globe, home, theme, xIcon];
 }
 
 class $AssetsImagesGen {

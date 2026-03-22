@@ -2,7 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:news/models/article_data.dart';
 import 'package:news/models/source_data_model.dart';
-import 'package:news/network_handler/network_handler.dart';
+import 'package:news/core/network_handler/network_handler.dart';
 
 class HomeViewModel extends ChangeNotifier{
 

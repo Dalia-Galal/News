@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:news/core/config/theme/color_palette.dart';
+import 'package:news/core/settings/settings_cubit.dart';
+import 'package:news/core/theme/color_palette.dart';
 import 'package:news/models/category_data_model.dart';
 import 'package:news/modules/home/articles_cubit/articles_cubit.dart';
 import 'package:news/modules/home/pages/articles_view.dart';
@@ -40,6 +41,8 @@ class _LoadedNewsViewState extends State<LoadedNewsView> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight =
+    (context.watch<SettingsCubit>().state.themeMode == ThemeMode.light);
     return Column(
       children: [
         BlocListener<SourcesCubit, SourcesStates>(
@@ -81,7 +84,7 @@ class _LoadedNewsViewState extends State<LoadedNewsView> {
                             tabAlignment: TabAlignment.start,
                             dividerColor: Colors.transparent,
                             padding: EdgeInsets.symmetric(vertical: 12),
-                            indicatorColor: ColorPalette.black,
+                            indicatorColor:(isLight)? ColorPalette.black:ColorPalette.white,
                             indicatorSize: TabBarIndicatorSize.tab,
                             indicatorWeight: 0.5,
                             indicatorPadding: EdgeInsets.symmetric(
@@ -99,7 +102,7 @@ class _LoadedNewsViewState extends State<LoadedNewsView> {
                                   fontWeight: isSelected
                                       ? FontWeight.w700
                                       : FontWeight.w500,
-                                  color: ColorPalette.black,
+                                  color: isLight?ColorPalette.black:ColorPalette.white,
                                 ),
                               );
                             }),

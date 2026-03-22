@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/article_data.dart';
 import '../../../models/source_data_model.dart';
-import '../../../network_handler/network_handler.dart';
+import '../../../core/network_handler/network_handler.dart';
 import 'home_states.dart';
 
 class HomeCubit extends Cubit<HomeStates> {

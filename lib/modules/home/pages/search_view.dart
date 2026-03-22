@@ -1,14 +1,17 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:news/core/settings/settings_cubit.dart';
 import 'package:news/models/article_data.dart';
 import 'package:news/modules/home/repository/home_repo_implementaion.dart';
 import 'package:news/modules/home/search_cubit/search_cubit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../core/config/theme/color_palette.dart';
+import '../../../core/theme/color_palette.dart';
 import '../../../gen/assets.gen.dart';
-import '../../../network_handler/network_handler.dart';
+import '../../../core/network_handler/network_handler.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -22,9 +25,10 @@ class _SearchViewState extends State<SearchView> {
   var homeRepository = HomeRepoImplementation();
   String searchText = '';
 
-
   @override
   Widget build(BuildContext context) {
+    bool isLight =
+        (context.watch<SettingsCubit>().state.themeMode == ThemeMode.light);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -32,15 +36,16 @@ class _SearchViewState extends State<SearchView> {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: TextFormField(
-                onChanged: (value) {searchText = value;
+                onChanged: (value) {
+                  searchText = value;
                   context.read<SearchCubit>().searchInArticles(value);
-
-
                 },
-
                 controller: _controller,
                 decoration: InputDecoration(
                   hintText: 'Search',
+                  hintStyle: TextStyle(
+                    color: isLight ? ColorPalette.black : ColorPalette.white,
+                  ),
                   prefixIcon: GestureDetector(
                     onTap: () {},
                     child: Padding(
@@ -49,7 +54,7 @@ class _SearchViewState extends State<SearchView> {
                         width: 24,
                         height: 24,
                         colorFilter: ColorFilter.mode(
-                          ColorPalette.black,
+                          isLight ? ColorPalette.black : ColorPalette.white,
                           BlendMode.srcIn,
                         ),
                       ),
@@ -66,7 +71,7 @@ class _SearchViewState extends State<SearchView> {
                         width: 14,
                         height: 14,
                         colorFilter: ColorFilter.mode(
-                          ColorPalette.iconColor,
+                          isLight ? ColorPalette.iconColor : ColorPalette.white,
                           BlendMode.srcIn,
                         ),
                       ),
@@ -75,7 +80,9 @@ class _SearchViewState extends State<SearchView> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     gapPadding: 16,
-                    borderSide: BorderSide(color: ColorPalette.black),
+                    borderSide: BorderSide(
+                      color: isLight ? ColorPalette.black : ColorPalette.white,
+                    ),
                   ),
                   contentPadding: EdgeInsetsGeometry.symmetric(vertical: 16),
                   focusedBorder: OutlineInputBorder(
@@ -99,24 +106,25 @@ class _SearchViewState extends State<SearchView> {
                       child: ListView.builder(
                         itemCount: state.articleList.length,
                         itemBuilder: (context, index) {
-                          return InkWell(onTap:()async {
-                            try {
-                              Uri siteLink = Uri.parse(
-                                state.articleList[index].url,
-                              );
-                              await launchUrl(siteLink);
-                            } catch (e) {
-                              debugPrint(e.toString());
-                            }
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => ArticleWebView(
-                            //       url: state.articlesList[index].url,
-                            //     ),
-                            //   ),
-                            // );
-                          },
+                          return InkWell(
+                            onTap: () async {
+                              try {
+                                Uri siteLink = Uri.parse(
+                                  state.articleList[index].url,
+                                );
+                                await launchUrl(siteLink);
+                              } catch (e) {
+                                debugPrint(e.toString());
+                              }
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => ArticleWebView(
+                              //       url: state.articlesList[index].url,
+                              //     ),
+                              //   ),
+                              // );
+                            },
                             child: Container(
                               padding: EdgeInsets.all(8.0),
                               margin: EdgeInsets.symmetric(
@@ -126,7 +134,7 @@ class _SearchViewState extends State<SearchView> {
                               width: 360,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: ColorPalette.black),
+                                border: Border.all(color:isLight? ColorPalette.black:ColorPalette.white),
                               ),
                               child: Column(
                                 spacing: 10,
@@ -146,7 +154,6 @@ class _SearchViewState extends State<SearchView> {
                                         : SizedBox(
                                             height: 100,
                                             width: double.infinity,
-
                                             child: Text(
                                               'No Image to preview',
                                               textAlign: TextAlign.center,
@@ -158,7 +165,9 @@ class _SearchViewState extends State<SearchView> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w700,
-                                      color: ColorPalette.black,
+                                      color: isLight
+                                          ? ColorPalette.black
+                                          : ColorPalette.white,
                                     ),
                                   ),
                                   Row(
@@ -166,7 +175,8 @@ class _SearchViewState extends State<SearchView> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        state.articleList[index].author??'Unknown Author',
+                                        state.articleList[index].author ??
+                                            'Unknown Author',
                                         style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -191,7 +201,7 @@ class _SearchViewState extends State<SearchView> {
                       ),
                     );
                   case SearchArticlesError():
-                    return Text(state.message,textAlign: TextAlign.center,);
+                    return Text(state.message, textAlign: TextAlign.center);
                 }
               },
             ),

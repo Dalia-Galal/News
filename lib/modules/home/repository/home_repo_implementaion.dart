@@ -1,7 +1,7 @@
 import 'package:news/models/article_data.dart';
 import 'package:news/models/source_data_model.dart';
 import 'package:news/modules/home/repository/home_repository.dart';
-import 'package:news/network_handler/network_handler.dart';
+import 'package:news/core/network_handler/network_handler.dart';
 
 class HomeRepoImplementation implements HomeRepository
 {
