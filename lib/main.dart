@@ -4,15 +4,20 @@ import 'package:news/core/routes/app_router.dart';
 import 'package:news/core/config/page_route_names.dart';
 import 'package:news/core/settings/settings_cubit.dart';
 import 'package:news/core/theme/theme_manager.dart';
-
 import 'core/bloc_observer.dart';
 import 'core/settings/settings_state.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   Bloc.observer = MyBlocObserver();
 
+  final settingsCubit = SettingsCubit();
+  await settingsCubit.loadTheme();
+
   runApp(
-    BlocProvider(create: (context) => SettingsCubit(), child: (const MyApp())),
+    BlocProvider.value(value:settingsCubit,
+        child: (const MyApp())),
   );
 }
 
