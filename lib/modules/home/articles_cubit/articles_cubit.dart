@@ -3,7 +3,6 @@ import 'package:news/models/source_data_model.dart';
 import 'package:news/modules/home/repository/home_repository.dart';
 
 import '../../../models/article_data.dart';
-import '../../../network_handler/network_handler.dart';
 
 part 'articles_state.dart';
 

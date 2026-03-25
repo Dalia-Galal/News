@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:news/core/config/page_route_names.dart';
+import 'package:news/core/l10n/app_localizations.dart';
 import 'package:news/core/settings/settings_cubit.dart';
 import 'package:news/core/theme/color_palette.dart';
 import 'package:news/models/category_data_model.dart';
@@ -56,6 +57,18 @@ class _HomeViewState extends State<HomeView> {
       darkImage: Assets.images.technology.path,
     ),
     CategoryDataModel(
+      id: 'entertainment',
+      title: 'Entertainment',
+      image: Assets.images.entertainmentDark.path,
+      darkImage: Assets.images.entertainment.path,
+    ),
+    CategoryDataModel(
+      id: 'health',
+      title: 'Health',
+      image: Assets.images.healthDark.path,
+      darkImage: Assets.images.health.path,
+    ),
+    CategoryDataModel(
       id: 'science',
       title: 'Science',
       image: Assets.images.scienceDark.path,
@@ -67,7 +80,6 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => SourcesCubit(homeRepository)),
@@ -84,7 +96,7 @@ class _HomeViewState extends State<HomeView> {
               ? ColorPalette.black
               : ColorPalette.white,
           title: Text(
-            selectedCategory?.title ?? 'Home',
+            selectedCategory?.title ?? AppLocalizations.of(context)!.home,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
@@ -134,7 +146,7 @@ class _HomeViewState extends State<HomeView> {
                     spacing: 10,
                     children: [
                       Text(
-                        'Good Morning\nHere is Some News For You',
+                        AppLocalizations.of(context)!.goodMorning,
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w500,

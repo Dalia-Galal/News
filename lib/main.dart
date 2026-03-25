@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:news/core/l10n/app_localizations.dart';
 import 'package:news/core/routes/app_router.dart';
 import 'package:news/core/config/page_route_names.dart';
 import 'package:news/core/settings/settings_cubit.dart';
@@ -13,7 +15,7 @@ void main() async {
   Bloc.observer = MyBlocObserver();
 
   final settingsCubit = SettingsCubit();
-  await settingsCubit.loadTheme();
+  await settingsCubit.loadSettings();
 
   runApp(
     BlocProvider.value(value:settingsCubit,
@@ -36,7 +38,9 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: PageRouteNames.initial,
           onGenerateRoute: AppRouter.onGenerateRoute,
-          locale: const Locale('ar'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: state.locale,
         );
       },
     );

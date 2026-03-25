@@ -4,6 +4,7 @@ import 'package:news/core/config/page_route_names.dart';
 import 'package:news/core/theme/color_palette.dart';
 import 'package:news/modules/home/widgets/custom_dialogue_widget.dart';
 
+import '../../../core/l10n/app_localizations.dart';
 import '../../../core/settings/settings_cubit.dart';
 import '../../../gen/assets.gen.dart';
 
@@ -15,15 +16,17 @@ class CustomDrawerWidget extends StatefulWidget {
 }
 
 class _CustomDrawerWidgetState extends State<CustomDrawerWidget> {
-  bool isEnglish = true;
-
   @override
   Widget build(BuildContext context) {
-    bool isLight = context.watch<SettingsCubit>().state.themeMode == ThemeMode.light;
-    return
-      SafeArea(
+    var appLocal = AppLocalizations.of(context);
+    bool isLight =
+        context.watch<SettingsCubit>().state.themeMode == ThemeMode.light;
+    bool isTheme = true;
+    bool isEnglish =
+        context.watch<SettingsCubit>().state.locale == Locale('en');
+    return SafeArea(
       child: Container(
-        color:Colors.black,
+        color: Colors.black,
         width: MediaQuery.of(context).size.width * 0.65,
         child: Column(
           children: [
@@ -33,7 +36,7 @@ class _CustomDrawerWidgetState extends State<CustomDrawerWidget> {
               color: ColorPalette.white,
               alignment: Alignment.center,
               child: Text(
-                'NewsApp',
+                appLocal!.newsApp,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
@@ -55,7 +58,7 @@ class _CustomDrawerWidgetState extends State<CustomDrawerWidget> {
                       children: [
                         Assets.icons.home.svg(),
                         Text(
-                          'Go To Home',
+                          appLocal.goToHome,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
@@ -75,7 +78,7 @@ class _CustomDrawerWidgetState extends State<CustomDrawerWidget> {
                         children: [
                           Assets.icons.theme.svg(),
                           Text(
-                            'Theme',
+                            appLocal.theme,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
@@ -92,12 +95,12 @@ class _CustomDrawerWidgetState extends State<CustomDrawerWidget> {
                           border: Border.all(color: ColorPalette.white),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 12.0),
+                          padding: const EdgeInsets.only(left: 12.0,right: 12.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                isLight ? 'Light' : 'Dark',
+                                isLight ? appLocal.light : appLocal.dark,
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,
@@ -110,7 +113,28 @@ class _CustomDrawerWidgetState extends State<CustomDrawerWidget> {
                                     context: context,
                                     barrierDismissible: true,
                                     builder: (context) {
-                                      return CustomDialogueWidget();
+                                      return CustomDialogueWidget(
+                                        title: appLocal.chooseTheme,
+                                        offText: appLocal.dark,
+                                        getValue: (context) {
+                                          final isLight =
+                                              context
+                                                  .watch<SettingsCubit>()
+                                                  .state
+                                                  .themeMode ==
+                                              ThemeMode.light;
+                                          return !isLight;
+                                        },
+                                        onChanged: (context, val) {
+                                          context
+                                              .read<SettingsCubit>()
+                                              .chooseTheme(
+                                                val
+                                                    ? ThemeMode.dark
+                                                    : ThemeMode.light,
+                                              );
+                                        },
+                                      );
                                     },
                                   );
                                 },
@@ -132,7 +156,7 @@ class _CustomDrawerWidgetState extends State<CustomDrawerWidget> {
                         children: [
                           Assets.icons.globe.svg(),
                           Text(
-                            'Language',
+                            appLocal.language,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
@@ -149,12 +173,14 @@ class _CustomDrawerWidgetState extends State<CustomDrawerWidget> {
                           border: Border.all(color: ColorPalette.white),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 12.0),
+                          padding: const EdgeInsets.only(left: 12.0,right: 12.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                (isEnglish) ? 'English' : 'Arabic',
+                                (isEnglish)
+                                    ? appLocal.english
+                                    : appLocal.arabic,
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,
@@ -167,67 +193,23 @@ class _CustomDrawerWidgetState extends State<CustomDrawerWidget> {
                                     context: context,
                                     barrierDismissible: true,
                                     builder: (context) {
-                                      return Dialog(
-                                        backgroundColor: Colors.transparent,
-                                        child: Container(
-                                          width: double.infinity,
-                                          padding: EdgeInsets.all(16),
-                                          decoration: BoxDecoration(
-                                            color: ColorPalette.black,
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
-                                          ),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                "Choose Language",
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: ColorPalette.white,
-                                                ),
-                                              ),
-                                              SizedBox(height: 16),
-
-                                              ListTile(
-                                                title: Text(
-                                                  "English",
-                                                  style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: ColorPalette.white,
-                                                  ),
-                                                ),
-                                                onTap: () {
-                                                  setState(() {
-                                                    isEnglish = true;
-                                                  });
-                                                  Navigator.pop(context);
-                                                },
-                                              ),
-
-                                              ListTile(
-                                                title: Text(
-                                                  "Arabic",
-                                                  style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: ColorPalette.white,
-                                                  ),
-                                                ),
-                                                onTap: () {
-                                                  setState(() {
-                                                    isEnglish = false;
-                                                  });
-
-                                                  Navigator.pop(context);
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                      return CustomDialogueWidget(
+                                        title: appLocal.chooseLanguage,
+                                        offText: appLocal.english,
+                                        getValue: (context) {
+                                          return context
+                                                  .watch<SettingsCubit>()
+                                                  .state
+                                                  .locale ==
+                                              Locale('en');
+                                        },
+                                        onChanged: (context, val) {
+                                          context
+                                              .read<SettingsCubit>()
+                                              .changeLanguage(
+                                                val ? 'en' : 'ar',
+                                              );
+                                        },
                                       );
                                     },
                                   );
@@ -249,3 +231,156 @@ class _CustomDrawerWidgetState extends State<CustomDrawerWidget> {
     );
   }
 }
+
+/* SafeArea(
+      child: Container(
+        color: Colors.black,
+        width: MediaQuery.of(context).size.width * 0.65,
+        child: Column(
+          children: [
+            Container(
+              height: 165,
+              width: double.infinity,
+              color: ColorPalette.white,
+              alignment: Alignment.center,
+              child: Text(
+                appLocal!.newsApp,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: ColorPalette.black,
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+              child: Column(
+                spacing: 10,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, PageRouteNames.home);
+                    },
+                    child: Row(
+                      spacing: 20,
+                      children: [
+                        Assets.icons.home.svg(),
+                        Text(
+                          appLocal.goToHome,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: ColorPalette.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(color: ColorPalette.white),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: ColorPalette.white),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: ExpansionTile(
+                      trailing:  Assets.icons.arrow.svg(),
+                      iconColor: ColorPalette.white,
+                      collapsedIconColor: ColorPalette.white,
+                      title: Row(
+                        children: [
+                          Assets.icons.theme.svg(),
+                          SizedBox(width: 8),
+                          Text(
+                            appLocal.theme,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: ColorPalette.white,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      children: [
+                        ListTile(
+                          title: Text(
+                            appLocal.light,
+                            style: TextStyle(color: ColorPalette.white),
+                          ),
+                          onTap: () {
+                            context.read<SettingsCubit>().chooseTheme(
+                              ThemeMode.light,
+                            );
+                          },
+                        ),
+
+                        ListTile(
+                          title: Text(
+                            appLocal.dark,
+                            style: TextStyle(color: ColorPalette.white),
+                          ),
+                          onTap: () {
+                            context.read<SettingsCubit>().chooseTheme(
+                              ThemeMode.dark,
+                            );
+
+                            },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(color: ColorPalette.white),
+                  Column(
+                    spacing: 8,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                        border: Border.all(color: ColorPalette.white),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                        child: ExpansionTile(
+                          trailing:  Assets.icons.arrow.svg(),
+                          iconColor: ColorPalette.white,
+                          collapsedIconColor: ColorPalette.white,
+
+                          title: Row(
+                            children: [
+                              Assets.icons.globe.svg(),
+                              SizedBox(width: 8),
+                              Text(
+                                appLocal.language,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: ColorPalette.white,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          children: [
+                            ListTile(
+                              title: Text(appLocal.english, style: TextStyle(color: Colors.white)),
+                              onTap: () {
+                                context.read<SettingsCubit>().changeLanguage(('en'));
+                              },
+                            ),
+                            ListTile(
+                              title: Text(appLocal.arabic, style: TextStyle(color: Colors.white)),
+                              onTap: () {
+                                context.read<SettingsCubit>().changeLanguage(('ar'));
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );*/

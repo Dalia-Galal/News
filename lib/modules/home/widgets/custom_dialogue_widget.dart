@@ -5,12 +5,24 @@ import '../../../core/settings/settings_cubit.dart';
 import '../../../core/theme/color_palette.dart';
 
 class CustomDialogueWidget extends StatelessWidget {
-  const CustomDialogueWidget({super.key});
+  final String title;
+  final String offText;
+
+  final bool Function(BuildContext) getValue;
+
+  final void Function(BuildContext, bool) onChanged;
+
+  const CustomDialogueWidget({
+    super.key,
+    required this.title,
+    required this.offText,
+    required this.getValue,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
-    bool isLight =
-        context.watch<SettingsCubit>().state.themeMode == ThemeMode.light;
+    final value = getValue(context);
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
@@ -24,7 +36,7 @@ class CustomDialogueWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Choose Theme",
+              title,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -34,7 +46,7 @@ class CustomDialogueWidget extends StatelessWidget {
             SizedBox(height: 16),
             ListTile(
               title: Text(
-                "Dark",
+                offText,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
@@ -43,37 +55,15 @@ class CustomDialogueWidget extends StatelessWidget {
               ),
 
               trailing: Switch(
-               //  activeThumbColor: ColorPalette.white,
-               //  inactiveThumbColor: ColorPalette.black,
-               //  trackOutlineColor: WidgetStatePropertyAll(Colors.white),
-               //  inactiveTrackColor: (Colors.white),
-               // activeTrackColor:  ColorPalette.black,
-
-                value: !isLight,
-                onChanged: (_) {
-                  context.read<SettingsCubit>().chooseTheme(ThemeMode.dark);
-                },
-              ),
-            ),
-            ListTile(
-              title: Text(
-                "Light",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: ColorPalette.white,
-                ),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-              },
-              trailing: Switch(
-                // activeThumbColor: ColorPalette.white,
-                // inactiveThumbColor: ColorPalette.black,
-
-                value: isLight,
-                onChanged: (_) {
-                  context.read<SettingsCubit>().chooseTheme(ThemeMode.light);
+                //  activeThumbColor: ColorPalette.white,
+                //  inactiveThumbColor: ColorPalette.black,
+                //  trackOutlineColor: WidgetStatePropertyAll(Colors.white),
+                //  inactiveTrackColor: (Colors.white),
+                // activeTrackColor:  ColorPalette.black,
+                value: value,
+                onChanged: (val) {
+                  Navigator.pop(context);
+                  onChanged(context, val);
                 },
               ),
             ),

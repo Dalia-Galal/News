@@ -1,0 +1,14 @@
+{
+"newsApp":"News App",
+"goToHome" : "Go To Home",
+"home":"Home",
+"theme" : "Theme",
+"chooseTheme" : "Choose Theme",
+"light" : "Light",
+"dark" :"Dark",
+"language" : "Language",
+"chooseLanguage": "Choose Language",
+"english" : "English",
+"arabic" : "Arabic",
+"goodMorning":"Good Morning\nHere is Some News For You"
+}
