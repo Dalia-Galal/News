@@ -22,23 +22,15 @@ The app supports multiple languages using Flutter localization (ARB files).
 - Organized translation files
 
 ## 📱 Screenshots
-### 🌞 Light Mode
-![Light](assets/screenshots/home_screen_light_mode.png)
+|🌞 Light Mode|🌙 Dark Mode|🔍 Search|
+|--------------|------------|----------|
+|<img src="assets/screenshots/home_screen_light_mode.png" width="200"/>|<img src="assets/screenshots/home_screen_dark_mode.png" width="200"/>|<img src="assets/screenshots/search_view.png" width="200"/>|
 
-### 🌙 Dark Mode
-![Dark](assets/screenshots/home_screen_dark_mode.png)
+|📰 Articles View|📰 Article Details|🌍 Arabic Language|
+|-----------------|------------------|------------------|
+|<img src="assets/screenshots/articles_view.png" width="200"/>|<img src="assets/screenshots/article_details_bottom_sheet_dark.png" width="200"/>|<img src="assets/screenshots/arabic_language.png" width="200"/>
 
-### 🔍 Search
-![Search](assets/screenshots/search_view.png)
-
-### 🌍 Arabic Language
-![Arabic](assets/screenshots/arabic_language.png)
-
-### 📰 Articles View
-![Articles View](assets/screenshots/articles_view.png)
-
-### 📰 Article Details
-![Article Details](assets/screenshots/article_details_bottom_sheet_dark.png)  
+ 
 
 
 ## 🛠️ Tech Stack
