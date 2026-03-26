@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:news/core/settings/settings_cubit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,10 +20,8 @@ class _ArticlesViewState extends State<ArticlesView> {
   final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
-    
     super.initState();
 
-   
     _scrollController.addListener(() {
       final articlesCubit = context.read<ArticlesCubit>();
       final state = articlesCubit.state;
@@ -30,7 +29,7 @@ class _ArticlesViewState extends State<ArticlesView> {
       if (state is ArticlesLoaded &&
           !state.hasReachedEnd &&
           _scrollController.position.pixels >=
-              _scrollController.position.maxScrollExtent-200) {
+              _scrollController.position.maxScrollExtent - 200) {
         articlesCubit.getAllArticles(widget.sourceId);
       }
     });
@@ -39,7 +38,7 @@ class _ArticlesViewState extends State<ArticlesView> {
   @override
   Widget build(BuildContext context) {
     bool isLight =
-    (context.watch<SettingsCubit>().state.themeMode == ThemeMode.light);
+        (context.watch<SettingsCubit>().state.themeMode == ThemeMode.light);
     return Flexible(
       child: BlocBuilder<ArticlesCubit, ArticlesStates>(
         builder: (context, state) {
@@ -51,28 +50,28 @@ class _ArticlesViewState extends State<ArticlesView> {
             case ArticlesLoaded():
               return ListView.builder(
                 controller: _scrollController,
-                itemCount: state.articlesList.length + (state.hasReachedEnd ? 0 : 1),
+                itemCount:
+                    state.articlesList.length + (state.hasReachedEnd ? 0 : 1),
                 itemBuilder: (context, index) {
-                  if (index >= state.articlesList.length){
+                  if (index >= state.articlesList.length) {
                     return const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16),
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                      child: Center(child: CircularProgressIndicator()),
                     );
                   }
-                  final article=state.articlesList[index];
+                  final article = state.articlesList[index];
                   return Container(
                     key: ValueKey(article.url),
-                    padding: EdgeInsets.all(8.0),
-                    margin: EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 10,
-                    ),
+                    padding: EdgeInsets.all(10.0),
+                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                     width: 360,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color:isLight? ColorPalette.black:ColorPalette.white),
+                      border: Border.all(
+                        color: isLight
+                            ? ColorPalette.black
+                            : ColorPalette.white,
+                      ),
                     ),
                     child: InkWell(
                       onTap: () {
@@ -82,17 +81,12 @@ class _ArticlesViewState extends State<ArticlesView> {
                           elevation: 2,
                           builder: (context) {
                             return CustomBottomSheet(
-                              description:
-                             article.description!,
-                              url:article.url,
-                              urlToImage:
-                             article.urlToImage ??
-                                  "",
+                              description: article.description!,
+                              url: article.url,
+                              urlToImage: article.urlToImage ?? "",
                               onPressed: () async {
                                 try {
-                                  Uri siteLink = Uri.parse(
-                                    article.url,
-                                  );
+                                  Uri siteLink = Uri.parse(article.url);
                                   await launchUrl(siteLink);
                                 } catch (e) {
                                   debugPrint(e.toString());
@@ -116,25 +110,25 @@ class _ArticlesViewState extends State<ArticlesView> {
                           ClipRRect(
                             borderRadius: BorderRadiusGeometry.circular(16),
                             child: Image.network(
-                             article.urlToImage!,
+                              article.urlToImage!,
                               fit: BoxFit.cover,
                             ),
                           ),
                           Text(
-                           article.title,
+                            article.title,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
-                              color: isLight?ColorPalette.black:ColorPalette.white,
+                              color: isLight
+                                  ? ColorPalette.black
+                                  : ColorPalette.white,
                             ),
                           ),
                           Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                               article.author ??
-                                    'Unknown Author',
+                                article.author ?? 'Unknown Author',
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
@@ -142,7 +136,10 @@ class _ArticlesViewState extends State<ArticlesView> {
                                 ),
                               ),
                               Text(
-                                ' 15 minutes ago',
+                                DateFormat('h:mm a - dd MMM').format(
+                                  DateTime.parse(article.publishedAt),
+                                ),
+
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,

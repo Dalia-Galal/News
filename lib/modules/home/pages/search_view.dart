@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:intl/intl.dart';
 import 'package:news/core/settings/settings_cubit.dart';
 import 'package:news/models/article_data.dart';
 import 'package:news/modules/home/repository/home_repo_implementaion.dart';
@@ -23,7 +24,6 @@ class SearchView extends StatefulWidget {
 class _SearchViewState extends State<SearchView> {
   final TextEditingController _controller = TextEditingController();
   var homeRepository = HomeRepoImplementation();
-  String searchText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +36,24 @@ class _SearchViewState extends State<SearchView> {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: TextFormField(
-                onChanged: (value) {
-                  searchText = value;
+                style: TextStyle(
+                  color: isLight ? ColorPalette.black : ColorPalette.white,
+                ),
+                onFieldSubmitted: (value) {
                   context.read<SearchCubit>().searchInArticles(value);
                 },
                 controller: _controller,
+                cursorColor: isLight ? ColorPalette.black : ColorPalette.white,
+                onTapUpOutside: (event) =>
+                    FocusManager.instance.primaryFocus?.unfocus(),
                 decoration: InputDecoration(
                   hintText: 'Search',
                   hintStyle: TextStyle(
                     color: isLight ? ColorPalette.black : ColorPalette.white,
                   ),
+
                   prefixIcon: GestureDetector(
-                    onTap: () {},
+                    onTap:search,
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Assets.icons.search.svg(
@@ -134,10 +140,14 @@ class _SearchViewState extends State<SearchView> {
                               width: 360,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color:isLight? ColorPalette.black:ColorPalette.white),
+                                border: Border.all(
+                                  color: isLight
+                                      ? ColorPalette.black
+                                      : ColorPalette.white,
+                                ),
                               ),
                               child: Column(
-                                spacing: 10,
+                                spacing: 20,
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadiusGeometry.circular(
@@ -184,7 +194,13 @@ class _SearchViewState extends State<SearchView> {
                                         ),
                                       ),
                                       Text(
-                                        ' 15 minutes ago',
+                                        DateFormat('h:mm a - dd MMM').format(
+                                          DateTime.parse(
+                                            state
+                                                .articleList[index]
+                                                .publishedAt,
+                                          ),
+                                        ),
                                         style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -209,5 +225,12 @@ class _SearchViewState extends State<SearchView> {
         ),
       ),
     );
+  }
+
+  void search() {
+    final value = _controller.text.trim();
+    if (value.isNotEmpty) {
+      context.read<SearchCubit>().searchInArticles(value);
+    }
   }
 }
